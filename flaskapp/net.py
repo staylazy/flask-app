@@ -35,11 +35,12 @@ input_shape=None, pooling=None, classes=1000)
 def read_image_files(files_max_count,dir_name):
     files = os.listdir(dir_name)
     files_count = files_max_count
-    if(files_max_count>len(files)): # определяем количество файлов не больше max
+    if(files_max_count > len(files)): # определяем количество файлов не больше max
         files_count = len(files)
     image_box = [[]]*files_count
     for file_i in range(files_count): # читаем изображения в список
         image_box[file_i] = Image.open(dir_name+'/'+files[file_i]) # / ??
+        image_box[file_i] = image_box[file_i].convert("RGB")
     return files_count, image_box
 # возвращаем результаты работы нейронной сети
 def getresult(image_box):
