@@ -48,6 +48,19 @@ class NetForm(FlaskForm):
    
     submit = SubmitField('send')
 
+
+class CropForm(FlaskForm):
+    
+    openid = StringField('openid', validators = [DataRequired()])
+
+    upload = FileField('Load image', validators=[
+    FileRequired(),
+    FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+  
+    recaptcha = RecaptchaField()
+   
+    submit = SubmitField('send')
+
 from werkzeug.utils import secure_filename
 import os
 
@@ -71,6 +84,7 @@ def net():
             neurodic[elem[0][1]] = elem[0][2]
 
         form.upload.data.save(filename)
+        print(filename)
 
     return render_template('net.html',form=form,image_name=filename,neurodic=neurodic) 
 
@@ -123,3 +137,20 @@ def apixml():
     #преобразуем из памяти dom в строку, возможно, понадобится указать кодировку
     strfile = ET.tostring(newhtml)
     return strfile
+
+import crop
+
+@app.route("/cropimage",methods=['GET', 'POST'])
+def cropimage():
+    form = CropForm()
+    filename=None
+    parts=None
+    graphs=None
+    if form.validate_on_submit():
+        filename = os.path.join('./static', secure_filename(form.upload.data.filename))
+        form.upload.data.save(filename)
+        parts, graphs = crop.get_croped_images(filename)# массив с кусочками изображения 
+        for i in range(5):
+            print(parts[i], graphs[i])
+    return render_template('cropimage.html', form=form, parts=parts, graphs=graphs)
+

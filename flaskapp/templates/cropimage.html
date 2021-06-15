@@ -1,0 +1,20 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+<!-- задаем заголовок страницы -->
+{% block title %}cropimage{% endblock %}
+<!-- блок body -->
+{% block content %}
+{{ wtf.quick_form(form, method='post',enctype="multipart/form-data", action="cropimage") }}
+<!-- один из стандартных тэгов html - заголовок второго уровня -->
+<h2>Image is here: </h2>
+<!-- отображаем загруженное изображение с закругленными углами -->
+<!-- если оно есть (после submit) -->
+{% if parts %}
+        {% for i in range(0, 5, 1) %}
+            <img src={{parts[i]}} class="img-rounded" alt="My Image" width = 224 height=224>
+            <img src={{graphs[i]}} class="img-rounded" alt="My Image" width = 224 height=224>
+        {% endfor %}
+{% else %}
+ <p> There is no images yet </p>
+{% endif %}
+{% endblock %} 
