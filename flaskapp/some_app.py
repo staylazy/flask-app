@@ -20,6 +20,7 @@ def data_to():
 
 from flask_wtf import FlaskForm,RecaptchaField
 from wtforms import StringField, SubmitField, TextAreaField
+from  wtforms.fields.html5 import IntegerField
 
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -48,12 +49,13 @@ class NetForm(FlaskForm):
    
     submit = SubmitField('send')
 
-
+from wtforms import validators
 class CropForm(FlaskForm):
     
-    #openid = StringField('openid', validators = [DataRequired()])
-
-    pics_range = StringField('Pictures Range', validators = [DataRequired()])
+    pic1 = IntegerField('Number of first part: ', validators=[validators.NumberRange(min=1, max=4)]) 
+    pic2 = IntegerField('Number of second part: ', validators=[validators.NumberRange(min=1, max=4)]) 
+    pic3 = IntegerField('Number of third part: ', validators=[validators.NumberRange(min=1, max=4)]) 
+    pic4 = IntegerField('Number of forth part: ', validators=[validators.NumberRange(min=1, max=4)])  
 
     upload = FileField('Load image', validators=[
     FileRequired(),
@@ -148,12 +150,15 @@ def cropimage():
     filename=None
     parts=None
     graphs=None
-    pics_range=None
+    pics_range=[]
     if form.validate_on_submit():
         filename = os.path.join('./static', secure_filename(form.upload.data.filename))
         form.upload.data.save(filename)
         parts, graphs = crop.get_croped_images(filename)# массив с кусочками изображения 
-        pics_range = form.pics_range.data.split(" ")
-        pics_range = [int(i) for i in pics_range]
+        pics_range.append(int(form.pic1.data))
+        pics_range.append(int(form.pic2.data))
+        pics_range.append(int(form.pic3.data))
+        pics_range.append(int(form.pic4.data))
+        print(pics_range)
     return render_template('cropimage.html', form=form, parts=parts, graphs=graphs, pics_range=pics_range)
 
