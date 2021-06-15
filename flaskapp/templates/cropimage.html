@@ -10,12 +10,17 @@
 <!-- отображаем загруженное изображение с закругленными углами -->
 <!-- если оно есть (после submit) -->
 {% if parts %}
-        <img src={{parts[0]}} class="img-rounded" alt="My Image" width = 224 height=224>
-        <img src={{graphs[0]}} class="img-rounded" alt="My Image" width = 224 height=224>
+        <table border="2px">
+            <tr><td>images</td><td>charts</td></tr>
+            <tr><td><img src={{parts[0]}} class="img-rounded" alt="My Image" width = 224 height=224></td>
+            <td><img src={{graphs[0]}} class="img-rounded" alt="My Image" width = 224 height=224></td></tr>
+        </table>
+        <table border="2px">
         {% for i in pics_range %}
-            <img src={{parts[i]}} class="img-rounded" alt="My Image" width = 224 height=224>
-            <img src={{graphs[i]}} class="img-rounded" alt="My Image" width = 224 height=224>
+            <tr><td><img src={{parts[i]}} class="img-rounded" alt="My Image" width = 224 height=224></td>
+            <td><img src={{graphs[i]}} class="img-rounded" alt="My Image" width = 224 height=224></td></tr>
         {% endfor %}
+    </table>
 {% else %}
  <p> There is no images yet </p>
 {% endif %}
