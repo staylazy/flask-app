@@ -51,7 +51,9 @@ class NetForm(FlaskForm):
 
 class CropForm(FlaskForm):
     
-    openid = StringField('openid', validators = [DataRequired()])
+    #openid = StringField('openid', validators = [DataRequired()])
+
+    pics_range = StringField('Pictures Range', validators = [DataRequired()])
 
     upload = FileField('Load image', validators=[
     FileRequired(),
@@ -146,11 +148,12 @@ def cropimage():
     filename=None
     parts=None
     graphs=None
+    pics_range=None
     if form.validate_on_submit():
         filename = os.path.join('./static', secure_filename(form.upload.data.filename))
         form.upload.data.save(filename)
         parts, graphs = crop.get_croped_images(filename)# массив с кусочками изображения 
-        for i in range(5):
-            print(parts[i], graphs[i])
-    return render_template('cropimage.html', form=form, parts=parts, graphs=graphs)
+        pics_range = form.pics_range.data.split(" ")
+        pics_range = [int(i) for i in pics_range]
+    return render_template('cropimage.html', form=form, parts=parts, graphs=graphs, pics_range=pics_range)
 
